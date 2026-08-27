@@ -52,7 +52,7 @@ mount(document.querySelector("canvas"), program);
 
 ## Validation
 
-Every claim above is backed by something more concrete than "the tests pass." The full transpiler pipeline — and every one of the 28 example programs in `examples/` — is confirmed to compile, link, and render correctly (or, for two deliberately-broken examples, to fail with a correctly translated error) in real browser engines (Chromium, Firefox, WebKit, Edge), not just Node-side unit tests asserting on generated GLSL text. 97%+ statement coverage on the transpiler core, a hand-rolled parser fuzzer, and a manual security review are also part of the v1.0.x quality bar — see `ROADMAP.md` and `docs/architecture/` for the details and the bugs each one actually found.
+Every claim above is backed by something more concrete than "the tests pass." The full transpiler pipeline — and every one of the 28 example programs in `examples/` — is confirmed to compile, link, and render correctly (or, for two deliberately-broken examples, to fail with a correctly translated error) in real browser engines (Chromium, Firefox, WebKit, Edge), not just Node-side unit tests asserting on generated GLSL text. 97%+ statement coverage on the transpiler core, a hand-rolled parser fuzzer, and a manual security review are also part of the v1.0.x quality bar — see `docs/architecture/` for the details and the bugs each one actually found.
 
 ## Contributing / developing locally
 
@@ -62,10 +62,10 @@ cd EZSLjs
 npm install
 npm run build
 npm test
-npm run example:gradient   # or any of ~28 examples — see CLAUDE.md for the full list
+npm run example:gradient   # or any of ~28 examples: gradient, circle, plasma, noise, raymarch, and more
 ```
 
-See `CLAUDE.md` for architecture notes and the full command reference.
+See `docs/architecture/` for design docs on each part of the pipeline, and `docs/ezsl-language-reference.md` for the language itself.
 
 ---
 

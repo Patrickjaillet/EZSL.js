@@ -81,7 +81,7 @@
       }
     },
     "builtins": {
-      "comment": "Auto-injected fragment builtins (uv/time/resolution) and vertex-stage builtins (position/normal + Three.js camera matrices) — see CLAUDE.md's boilerplate-injection section and docs/architecture/three-integration.md.",
+      "comment": "Auto-injected fragment builtins (uv/time/resolution) and vertex-stage builtins (position/normal + Three.js camera matrices) — see docs/architecture/three-integration.md.",
       "patterns": [
         {
           "name": "variable.language.ezsl",

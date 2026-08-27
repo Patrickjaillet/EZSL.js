@@ -42,8 +42,8 @@ function glslOutputPath(ezslPath: string): string {
 /**
  * `ezsl build <file.ezsl>`: compiles one file and writes `<name>.glsl` next
  * to it — the "inspectable GLSL output" the project's own design pillar
- * calls for (see CLAUDE.md's "Core design pillars"), not stdout or a
- * structured JSON blob (an explicit scope decision — see docs/architecture/cli.md).
+ * calls for, not stdout or a structured JSON blob (an explicit scope
+ * decision — see docs/architecture/cli.md).
  * Returns the exit code to use.
  */
 export async function runBuild(ezslPath: string, options: CliOptions = {}): Promise<number> {

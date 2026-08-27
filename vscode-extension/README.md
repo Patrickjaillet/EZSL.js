@@ -11,7 +11,7 @@ Syntax highlighting and inferred-type hover tooltips for [EZSL.js](../README.md)
 
 This extension bundles the `ezsl` compiler package directly (via [esbuild](https://esbuild.github.io/)) and calls its `collectVariableDeclarations(source)` function against the current document's text on every hover — the same type-inference pass the compiler itself uses to generate GLSL, not a separate/approximate re-implementation. If the document doesn't currently compile (e.g. mid-edit), whatever declarations were successfully inferred before the failure are still shown; the hover provider never throws on invalid intermediate source.
 
-Uniforms and function parameters aren't covered by hover yet — see `docs/architecture/vscode-extension.md` (in the main [EZSL.js repository](https://github.com/anthropics/ezsl)) for the full design and scope notes.
+Uniforms and function parameters aren't covered by hover yet — see `docs/architecture/vscode-extension.md` (in the main [EZSL.js repository](https://github.com/Patrickjaillet/EZSL.js)) for the full design and scope notes.
 
 ## Development
 

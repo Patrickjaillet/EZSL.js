@@ -43,10 +43,10 @@ Every claim above is backed by something more concrete than "the tests pass." Th
 git clone <repository-url>
 cd EZSLjs
 npm install
-npm run example:gradient   # or any of ~28 examples — see CLAUDE.md for the full list
+npm run example:gradient   # or any of ~28 examples — see README.md for the full list
 ```
 
-Read `docs/tutorials/three-js-scene.md`, `docs/tutorials/multi-pass-shadertoy.md`, or `docs/tutorials/canvas2d-compositing.md` for a guided walkthrough of a real integration, or `ROADMAP.md` for the full, honestly-annotated feature history — every shipped item there is checked off with a note on how it was actually validated, not just that it exists.
+Read `docs/tutorials/three-js-scene.md`, `docs/tutorials/multi-pass-shadertoy.md`, or `docs/tutorials/canvas2d-compositing.md` for a guided walkthrough of a real integration.
 
 ## What's next
 
