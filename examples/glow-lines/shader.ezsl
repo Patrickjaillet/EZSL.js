@@ -1,0 +1,28 @@
+fn sdLine(px, py, ax, ay, bx, by) {
+  pax = px - ax
+  pay = py - ay
+  bax = bx - ax
+  bay = by - ay
+  dotPaBa = pax * bax + pay * bay
+  dotBaBa = bax * bax + bay * bay
+  h = clamp(dotPaBa / dotBaBa, 0.0, 1.0)
+  dx = pax - bax * h
+  dy = pay - bay * h
+  return length([dx, dy])
+}
+
+p = uv - [0.5, 0.5]
+
+a1 = [-0.35, sin(time) * 0.2]
+b1 = [0.35, -sin(time) * 0.2]
+
+a2 = [0.0, 0.35]
+b2 = [0.0, -0.35]
+
+d1 = sdLine(p.x, p.y, a1.x, a1.y, b1.x, b1.y)
+d2 = sdLine(p.x, p.y, a2.x, a2.y, b2.x, b2.y)
+d = min(d1, d2)
+
+glow = exp(-d * 25.0)
+
+color = [glow * 0.3, glow * 0.9, glow]

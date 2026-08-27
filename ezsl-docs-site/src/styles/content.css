@@ -1,0 +1,50 @@
+/* Rendered markdown content styles (inside #content). */
+
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 0;
+  letter-spacing: -0.01em;
+}
+
+#content h2 {
+  font-size: 19px;
+  font-weight: 600;
+  margin-top: var(--space-7);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-2);
+}
+
+#content p { color: var(--text-secondary); }
+
+#content a { color: var(--accent); }
+#content a:hover { color: var(--accent-strong); }
+
+#content code {
+  background: var(--bg-inset);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+  font-family: var(--font-mono);
+}
+
+#content pre {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+#content pre code { background: none; padding: 0; }
+
+#content table { border-collapse: collapse; width: 100%; }
+
+#content th, #content td {
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  font-size: 13px;
+}
+
+#content th { background: var(--bg-inset); }

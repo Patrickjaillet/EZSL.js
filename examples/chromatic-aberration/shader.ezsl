@@ -1,0 +1,15 @@
+center = uv - [0.5, 0.5]
+dist = length(center)
+dir = normalize(center)
+
+offset = dist * 0.03
+
+rUv = uv - dir * offset
+gUv = uv
+bUv = uv + dir * offset
+
+rBar = smoothstep(0.02, 0.0, abs(rUv.y - 0.5 - 0.15 * sin(rUv.x * 10.0 + time)))
+gBar = smoothstep(0.02, 0.0, abs(gUv.y - 0.5 - 0.15 * sin(gUv.x * 10.0 + time)))
+bBar = smoothstep(0.02, 0.0, abs(bUv.y - 0.5 - 0.15 * sin(bUv.x * 10.0 + time)))
+
+color = [rBar, gBar, bBar]

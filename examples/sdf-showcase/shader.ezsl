@@ -1,0 +1,37 @@
+fn sdCircle(px, py, r) {
+  return length([px, py]) - r
+}
+
+fn sdBox(px, py, extent) {
+  qx = abs(px) - extent
+  qy = abs(py) - extent
+  ax = max(qx, 0.0)
+  ay = max(qy, 0.0)
+  outside = length([ax, ay])
+  inside = min(max(qx, qy), 0.0)
+  return outside + inside
+}
+
+fn sdHexagon(px, py, r) {
+  ax = abs(px)
+  ay = abs(py)
+  k = 0.866025
+  proj = ax * k + ay * 0.5
+  d1 = proj - r * k
+  d2 = ay - r
+  return max(d1, d2)
+}
+
+grid = uv * 3.0
+cell = fract(grid) - [0.5, 0.5]
+cellId = floor(grid)
+
+col = mod(cellId.x, 3.0)
+
+d = 1.0
+d = mix(d, sdCircle(cell.x, cell.y, 0.35), step(abs(col - 0.0), 0.1))
+d = mix(d, sdBox(cell.x, cell.y, 0.3), step(abs(col - 1.0), 0.1))
+d = mix(d, sdHexagon(cell.x, cell.y, 0.32), step(abs(col - 2.0), 0.1))
+
+shape = 1.0 - smoothstep(0.0, 0.02, d)
+color = [shape, shape * 0.8, shape * 0.5]

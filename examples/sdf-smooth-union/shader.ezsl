@@ -1,0 +1,24 @@
+fn sdCircle(px, py, r) {
+  return length([px, py]) - r
+}
+
+fn smin(a, b, k) {
+  h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0)
+  return mix(b, a, h) - k * h * (1.0 - h)
+}
+
+p = uv - [0.5, 0.5]
+
+c1 = [sin(time) * 0.2 - 0.15, 0.0]
+c2 = [-sin(time) * 0.2 + 0.15, 0.0]
+
+q1 = p - c1
+q2 = p - c2
+
+d1 = sdCircle(q1.x, q1.y, 0.18)
+d2 = sdCircle(q2.x, q2.y, 0.18)
+
+blended = smin(d1, d2, 0.15)
+
+shape = 1.0 - smoothstep(0.0, 0.015, blended)
+color = [shape * 0.3, shape * 0.7, shape]

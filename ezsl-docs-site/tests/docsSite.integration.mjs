@@ -1,13 +1,13 @@
-// Real-browser integration check for the Interactive Documentation Site
-// (v1.0.x Ecosystem Launch). Mirrors ezsl-playground's own
-// tests/playground.integration.mjs pattern (start Vite, drive a real
-// Chromium via Playwright) — the whole point here is confirming the
-// 3-tier nav, hash-based routing, the Markdown-to-live-block rendering
-// pipeline (including pages whose content is loaded directly from
-// docs/tutorials/*.md, not duplicated), and CodeMirror + WebGL2 preview
-// mounting all actually work together in a real browser. See
-// docs/architecture/interactive-docs-site.md. Formalizes the ad-hoc
-// checks manually run during development (all of which passed).
+// Real-browser integration check for the Interactive Documentation Site +
+// Playground (v2 unified site — see docs/architecture/unified-site-v2.md).
+// Mirrors the project's established pattern (start Vite, drive a real
+// Chromium via Playwright) — the whole point here is confirming the nav
+// (including the merged Playground route and the new Comparisons tier),
+// hash-based routing, the Markdown-to-live-block rendering pipeline, the
+// merged Shadertoy-style editor (gallery, GLSL split-view, share URLs),
+// and mobile responsiveness all actually work together in a real browser.
+// This suite absorbs the former standalone ezsl-playground package's own
+// playground.integration.mjs checks — see the "Playground" section below.
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
@@ -68,7 +68,8 @@ async function main() {
     if (helloLiveBlocks !== 1) fail(`expected 1 live block on hello-gradient, got ${helloLiveBlocks}`);
     else console.log("PASS: hello-gradient page mounts exactly 1 live block");
 
-    // The 3-tier nav renders all 9 pages, correctly grouped.
+    // The 4-tier nav renders all 14 pages, correctly grouped, plus the
+    // always-visible Playground link outside the tier loop.
     const navLinks = await page.evaluate(() => Array.from(document.querySelectorAll(".nav-link")).map((a) => a.textContent));
     const expectedTitles = [
       "1. Hello, gradient",
@@ -79,20 +80,26 @@ async function main() {
       "Three.js scene",
       "Multi-pass (Shadertoy-style)",
       "Canvas2D compositing",
+      "Overview",
+      "Syntax side-by-side",
+      "Type systems compared",
+      "Uniforms & varyings compared",
+      "Multi-pass compared",
       "The Escape Hatch",
     ];
     const navMatches = navLinks.length === expectedTitles.length && expectedTitles.every((t, i) => navLinks[i] === t);
-    if (!navMatches) fail(`nav links do not match expected 9-page, 3-tier structure: ${JSON.stringify(navLinks)}`);
-    else console.log("PASS: nav renders all 9 pages across Beginner/Intermediate/Advanced tiers, in order");
+    if (!navMatches) fail(`nav links do not match expected 14-page, 4-tier structure: ${JSON.stringify(navLinks)}`);
+    else console.log("PASS: nav renders all 14 pages across Beginner/Intermediate/Comparisons/Advanced tiers, in order");
 
-    // Headings render as "Beginner"/"Intermediate"/"Advanced" in the DOM;
-    // CSS (text-transform: uppercase) is what visually renders them
-    // upper-case, not the actual textContent.
+    const playgroundNavLink = await page.evaluate(() => document.querySelector(".nav-playground-link")?.textContent);
+    if (playgroundNavLink !== "Playground") fail(`expected a Playground nav link, got ${JSON.stringify(playgroundNavLink)}`);
+    else console.log("PASS: the Playground nav link is present, outside the tier loop");
+
     const tierHeadings = await page.evaluate(() => Array.from(document.querySelectorAll(".nav-tier-heading")).map((h) => h.textContent));
-    if (JSON.stringify(tierHeadings) !== JSON.stringify(["Beginner", "Intermediate", "Advanced"])) {
-      fail(`expected 3 tier headings in order, got ${JSON.stringify(tierHeadings)}`);
+    if (JSON.stringify(tierHeadings) !== JSON.stringify(["Beginner", "Intermediate", "Comparisons", "Advanced"])) {
+      fail(`expected 4 tier headings in order, got ${JSON.stringify(tierHeadings)}`);
     } else {
-      console.log("PASS: the 3 tier headings render in order");
+      console.log("PASS: the 4 tier headings render in order, including the new Comparisons tier");
     }
 
     // Navigating (hash route) to a beginner page with multiple live blocks.
@@ -150,6 +157,111 @@ async function main() {
     if (escapeHatchLiveBlocks !== 1) fail(`expected 1 live block on escape-hatch, got ${escapeHatchLiveBlocks}`);
     else console.log("PASS: escape-hatch page mounts exactly 1 live block");
 
+    // --- Comparisons tier ---
+    await page.evaluate(() => (window.location.hash = "#/syntax-side-by-side"));
+    await page.waitForTimeout(800);
+    const tabButtons = await page.evaluate(() => document.querySelectorAll("#syntax-tabs .tabs-nav button").length);
+    if (tabButtons !== 4) fail(`expected 4 tabs (EZSL/GLSL/Shadertoy/WGSL) on syntax-side-by-side, got ${tabButtons}`);
+    else console.log("PASS: syntax-side-by-side page renders all 4 language tabs");
+
+    await page.click('#syntax-tabs .tabs-nav button[data-tab="wgsl"]');
+    await page.waitForTimeout(200);
+    const activeTabPanel = await page.evaluate(() => document.querySelector("#syntax-tabs .tabs-panel.active")?.dataset.tab);
+    if (activeTabPanel !== "wgsl") fail(`expected clicking the WGSL tab to activate its panel, got active panel ${JSON.stringify(activeTabPanel)}`);
+    else console.log("PASS: clicking a tab switches the active panel");
+
+    const wgslBadgeVisible = await page.evaluate(() => document.querySelectorAll(".badge-experimental").length > 0);
+    if (!wgslBadgeVisible) fail("expected an Experimental badge on the WGSL tab/content");
+    else console.log("PASS: the WGSL Experimental badge is present");
+
+    // --- Playground (merged from the former standalone ezsl-playground package) ---
+    await page.evaluate(() => (window.location.hash = "#/playground"));
+    await page.waitForTimeout(1000);
+
+    const initialGlsl = await page.evaluate(() => document.getElementById("glsl-output")?.textContent ?? "");
+    if (!initialGlsl.includes("#version 300 es")) fail("initial GLSL split-view is not populated with real GLSL on the Playground route");
+    else console.log("PASS: Playground route populates the GLSL split-view on load");
+
+    const galleryCount = await page.evaluate(() => document.querySelectorAll(".gallery-item").length);
+    if (galleryCount !== 33) fail(`expected 33 curated gallery entries (21 original + 12 new), got ${galleryCount}`);
+    else console.log(`PASS: Playground gallery renders all 33 curated entries`);
+
+    const categoryHeadings = await page.evaluate(() => Array.from(document.querySelectorAll(".gallery-category-heading")).map((h) => h.textContent));
+    if (categoryHeadings.length !== 5) fail(`expected 5 gallery category headings, got ${JSON.stringify(categoryHeadings)}`);
+    else console.log(`PASS: gallery is grouped under ${categoryHeadings.length} category headings`);
+
+    await page.click(".gallery-item >> text=Voronoi");
+    await page.waitForTimeout(500);
+    const voronoiLineCount = await page.evaluate(() => document.querySelectorAll("#ezsl-editor .cm-line").length);
+    const activeItem = await page.evaluate(() => document.querySelector(".gallery-item.active")?.textContent);
+    if (voronoiLineCount < 3 || activeItem !== "Voronoi") {
+      fail(`clicking a new gallery entry (Voronoi) did not correctly load it: lines=${voronoiLineCount} activeItem=${JSON.stringify(activeItem)}`);
+    } else {
+      console.log("PASS: clicking a newly-added gallery entry (Voronoi) loads it and marks it active");
+    }
+
+    await page.click("#gallery-toggle");
+    await page.waitForTimeout(250);
+    const collapsedWidth = await page.evaluate(() => document.getElementById("gallery-panel")?.getBoundingClientRect().width ?? -1);
+    if (collapsedWidth > 5) fail(`gallery panel did not collapse when toggled (width=${collapsedWidth})`);
+    else console.log("PASS: the Playground gallery panel collapses when toggled");
+    await page.click("#gallery-toggle");
+
+    await page.click("#ezsl-editor .cm-content");
+    await page.keyboard.press("Control+A");
+    await page.keyboard.type("color = [1.0, 0.0, 0.0]", { delay: 5 });
+    await page.waitForTimeout(500);
+    const editedGlsl = await page.evaluate(() => document.getElementById("glsl-output")?.textContent ?? "");
+    if (!editedGlsl.includes("1.0, 0.0, 0.0")) fail("editing the Playground source did not update the GLSL split-view");
+    else console.log("PASS: real-time recompile updates the Playground's GLSL split-view");
+
+    await page.keyboard.press("Control+A");
+    await page.keyboard.type("color = unknownFn(1.0)", { delay: 5 });
+    await page.waitForTimeout(500);
+    const errorVisible = await page.evaluate(() => document.getElementById("error-overlay")?.style.display === "block");
+    const errorText = await page.evaluate(() => document.getElementById("error-overlay")?.textContent ?? "");
+    if (!errorVisible || !errorText.includes("unknown function")) fail(`Playground compile error overlay incorrect: visible=${errorVisible} text=${JSON.stringify(errorText)}`);
+    else console.log("PASS: a real CompileError shows a correctly formatted overlay on the Playground route");
+
+    await page.keyboard.press("Control+A");
+    await page.keyboard.type("color = [0.0, 1.0, 1.0]", { delay: 5 });
+    await page.waitForTimeout(500);
+    const errorHiddenAfterFix = await page.evaluate(() => document.getElementById("error-overlay")?.style.display !== "block");
+    if (!errorHiddenAfterFix) fail("Playground error overlay did not hide after fixing the shader");
+    else console.log("PASS: fixing a broken shader hides the Playground error overlay");
+
+    const urlAfterEdit = page.url();
+    if (!urlAfterEdit.includes("#/playground/")) fail("URL does not use the #/playground/<base64> scheme after editing");
+    else console.log("PASS: the URL updates live to reflect the current shader under the #/playground/ route");
+
+    await page.goto(urlAfterEdit, { waitUntil: "load" });
+    await page.waitForTimeout(1000);
+    const restoredContent = await page.evaluate(() => document.querySelector("#ezsl-editor .cm-content")?.textContent ?? "");
+    if (!restoredContent.includes("1.0")) fail(`reloading a Playground share URL did not restore the shader (got: ${JSON.stringify(restoredContent)})`);
+    else console.log("PASS: reloading a shareable Playground URL restores the shader source");
+
+    // --- Mobile responsiveness ---
+    await page.evaluate(() => (window.location.hash = "#/hello-gradient"));
+    await page.setViewportSize({ width: 480, height: 800 });
+    await page.waitForTimeout(500);
+    const navHiddenOnMobile = await page.evaluate(() => !document.getElementById("app")?.classList.contains("nav-open"));
+    if (!navHiddenOnMobile) fail("expected the nav to start closed on a mobile-width viewport");
+    else console.log("PASS: the sidebar nav starts closed on a mobile-width viewport");
+
+    await page.click("#nav-toggle");
+    await page.waitForTimeout(300);
+    const navOpenAfterToggle = await page.evaluate(() => document.getElementById("app")?.classList.contains("nav-open"));
+    if (!navOpenAfterToggle) fail("clicking the hamburger nav toggle did not open the mobile nav");
+    else console.log("PASS: the hamburger nav toggle opens the mobile nav overlay");
+
+    await page.click("#nav-scrim");
+    await page.waitForTimeout(300);
+    const navClosedAfterScrim = await page.evaluate(() => !document.getElementById("app")?.classList.contains("nav-open"));
+    if (!navClosedAfterScrim) fail("clicking the nav scrim did not close the mobile nav");
+    else console.log("PASS: clicking the scrim closes the mobile nav overlay");
+
+    await page.setViewportSize({ width: 1200, height: 900 });
+
     if (pageErrors.length > 0) {
       fail(`uncaught page errors: ${JSON.stringify(pageErrors)}`);
     } else {
@@ -165,7 +277,7 @@ async function main() {
   }
 
   if (!process.exitCode) {
-    console.log("\nAll Interactive Documentation Site integration checks passed.");
+    console.log("\nAll Interactive Documentation Site + Playground integration checks passed.");
   }
 }
 

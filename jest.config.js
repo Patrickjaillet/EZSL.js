@@ -16,7 +16,7 @@ export default {
   // files here, which ts-jest then rejects (those files import from
   // outside this project's own src/ rootDir). Run each sibling package's
   // own tests via its own `npm test` inside that directory instead.
-  testPathIgnorePatterns: ["/node_modules/", "/ezsl-presets/", "/vscode-extension/", "/ezsl-playground/", "/ezsl-docs-site/"],
+  testPathIgnorePatterns: ["/node_modules/", "/ezsl-presets/", "/vscode-extension/", "/ezsl-docs-site/"],
   // v1.0.x "≥90% unit test coverage on the transpiler core" — only active
   // when --coverage is passed (npm run coverage), not on a plain `npm test`
   // run, since instrumenting every file on every ordinary test run has a

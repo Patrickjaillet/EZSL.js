@@ -1,5 +1,7 @@
 # EZSL.js — Online Playground (v1.0.x)
 
+> **Superseded by `docs/architecture/unified-site-v2.md`.** The standalone `ezsl-playground` package described in this document was merged into `ezsl-docs-site` (as the `#/playground` route) and deleted. This doc is kept as-is for historical record of the original standalone-package design — do not edit it to reflect the current state.
+
 Internal design doc for the v1.0.x Ecosystem Launch "Online Playground (browser-based editor + live preview, shareable shader URLs)" deliverable. Read `docs/architecture/dev-server.md` first — the Playground's hot-reload/error-handling model deliberately mirrors `ezsl dev`'s own (`swapProgram`-based live updates, an error overlay that leaves the previous frame rendering rather than blanking the canvas), applied to a browser-native editor instead of a file-watching Node server.
 
 ## Scope: three of three roadmap sub-items, with "community/moderated" explicitly out of scope

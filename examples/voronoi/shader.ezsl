@@ -1,0 +1,26 @@
+fn hashX(px, py) {
+  return fract(sin(px * 127.1 + py * 311.7) * 43758.5453)
+}
+
+fn hashY(px, py) {
+  return fract(sin(px * 269.5 + py * 183.3) * 43758.5453)
+}
+
+st = uv * 6.0
+cellId = floor(st)
+cellPos = fract(st)
+
+minDist = 1.0
+
+for y in 0..3 {
+  for x in 0..3 {
+    neighbor = [float(x) - 1.0, float(y) - 1.0]
+    cell = cellId + neighbor
+    offset = [hashX(cell.x, cell.y), hashY(cell.x, cell.y)]
+    diff = neighbor + offset - cellPos
+    dist = length(diff)
+    minDist = min(minDist, dist)
+  }
+}
+
+color = [minDist, minDist, minDist]

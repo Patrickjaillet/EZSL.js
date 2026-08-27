@@ -1,0 +1,27 @@
+fn noise(px, py) {
+  return fract(sin(px * 12.9898 + py * 78.233) * 43758.5453)
+}
+
+fn fbm(px, py) {
+  total = 0.0
+  amp = 0.5
+  freq = 1.0
+  for i in 0..4 {
+    total = total + noise(px * freq, py * freq) * amp
+    amp = amp * 0.5
+    freq = freq * 2.0
+  }
+  return total
+}
+
+p = uv * 3.0
+
+warpX = fbm(p.x, p.y + time * 0.1)
+warpY = fbm(p.x + 5.2, p.y + time * 0.1)
+
+warpedX = p.x + warpX * 1.5
+warpedY = p.y + warpY * 1.5
+
+n = fbm(warpedX, warpedY)
+
+color = [n, n * 0.6, n * 0.9 + 0.1]

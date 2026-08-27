@@ -46,11 +46,10 @@ The raw driver text is always still shown alongside, never hidden — the goal i
 
 ## An ecosystem, not just a library
 
-Three companion packages, each independently useful:
+Two companion packages, each independently useful:
 
 - **[ezsl-presets](https://github.com/Patrickjaillet/EZSL.js/tree/master/ezsl-presets)** — reusable noise fields, SDF primitives, color grading, and blur/bloom passes as pre-built functions, ready to drop into `compileEzsl`.
-- **[ezsl-playground](https://github.com/Patrickjaillet/EZSL.js/tree/master/ezsl-playground)** — a browser-based editor with live GLSL output side-by-side with your EZSL source, a curated shader gallery, and shareable URLs (the whole shader lives in the URL fragment — no backend needed).
-- **[ezsl-docs-site](https://github.com/Patrickjaillet/EZSL.js/tree/master/ezsl-docs-site)** — an interactive documentation site with live-editable code blocks in every tutorial. Live now at **[patrickjaillet.github.io/EZSL.js](https://patrickjaillet.github.io/EZSL.js/)**.
+- **[ezsl-docs-site](https://github.com/Patrickjaillet/EZSL.js/tree/master/ezsl-docs-site)** — the unified documentation site: a progressive tutorial track with live-editable code blocks, a Shadertoy-style Playground (`#/playground`) with a 33-shader gallery and shareable URLs, and an EZSL vs GLSL vs Shadertoy vs WGSL comparison tier. Live now at **[patrickjaillet.github.io/EZSL.js](https://patrickjaillet.github.io/EZSL.js/)**.
 
 ## How this was actually validated
 

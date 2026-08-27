@@ -2,14 +2,12 @@ import { LexError, ParseError, CompileError } from "@patrickjaillet/ezsl";
 
 /**
  * Pretty-prints an EZSL-side `LexError`/`ParseError`/`CompileError` as a
- * source-snippet-plus-caret block. Duplicated (not shared) from
- * `ezsl-playground/src/formatError.ts` — both packages independently
- * reimplement `src/cli/formatCliError.ts`'s visual shape, since that
- * formatter is an internal CLI module, not exported from `ezsl`'s package
- * root (see docs/architecture/online-playground.md's own note on this —
- * the same reasoning applies here). A small, deliberate duplication
- * across two small, independent packages, not a shared-code opportunity
- * missed.
+ * source-snippet-plus-caret block — the same visual shape
+ * `src/cli/formatCliError.ts` (in the main `ezsl` package) already uses
+ * for the CLI, reimplemented locally here since that formatter is an
+ * internal CLI module, not exported from the package root (`src/index.ts`
+ * only re-exports the error *classes* themselves, not the CLI's own
+ * pretty-printer).
  */
 export function formatEzslError(error: LexError | ParseError | CompileError, source: string): string {
   const lines: string[] = [];

@@ -1,0 +1,21 @@
+fn hue2rgbR(h) {
+  return clamp(abs(mod(h * 6.0 + 3.0, 6.0) - 3.0) - 1.0, 0.0, 1.0)
+}
+
+fn hue2rgbG(h) {
+  return clamp(2.0 - abs(mod(h * 6.0 + 2.0, 6.0) - 3.0), 0.0, 1.0)
+}
+
+fn hue2rgbB(h) {
+  return clamp(2.0 - abs(mod(h * 6.0 + 4.0, 6.0) - 3.0), 0.0, 1.0)
+}
+
+hue = fract(uv.x + time * 0.1)
+sat = 0.8
+val = 1.0 - length(uv - [uv.x, 0.5]) * 0.6
+
+r = mix(1.0, hue2rgbR(hue), sat) * val
+g = mix(1.0, hue2rgbG(hue), sat) * val
+b = mix(1.0, hue2rgbB(hue), sat) * val
+
+color = [r, g, b]

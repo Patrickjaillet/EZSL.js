@@ -1,0 +1,32 @@
+fn sdLine(px, py, ax, ay, bx, by) {
+  pax = px - ax
+  pay = py - ay
+  bax = bx - ax
+  bay = by - ay
+  dotPaBa = pax * bax + pay * bay
+  dotBaBa = bax * bax + bay * bay
+  h = clamp(dotPaBa / dotBaBa, 0.0, 1.0)
+  dx = pax - bax * h
+  dy = pay - bay * h
+  return length([dx, dy])
+}
+
+center = uv - [0.5, 0.5]
+radius = length(center)
+
+face = 1.0 - smoothstep(0.35, 0.36, radius)
+rim = smoothstep(0.34, 0.35, radius) * (1.0 - smoothstep(0.36, 0.37, radius))
+
+hourAngle = time * 0.15
+minuteAngle = time * 1.0
+
+hourTip = [sin(hourAngle), cos(hourAngle)] * 0.15
+minuteTip = [sin(minuteAngle), cos(minuteAngle)] * 0.25
+
+hourHand = 1.0 - smoothstep(0.0, 0.012, sdLine(center.x, center.y, 0.0, 0.0, hourTip.x, hourTip.y))
+minuteHand = 1.0 - smoothstep(0.0, 0.008, sdLine(center.x, center.y, 0.0, 0.0, minuteTip.x, minuteTip.y))
+
+shape = max(hourHand, minuteHand) * face
+shape = max(shape, rim)
+
+color = [shape, shape, shape * 0.9]

@@ -39,8 +39,11 @@ mount(document.querySelector("canvas"), program);
 ## Ecosystem
 
 - [ezsl-presets](ezsl-presets/) — reusable noise/SDF/color-grading/blur-bloom shader presets as pre-built functions.
-- [ezsl-playground](ezsl-playground/) — a browser-based editor with live GLSL output, a curated shader gallery, and shareable URLs.
-- [ezsl-docs-site](ezsl-docs-site/) — an interactive documentation site with live-editable code blocks.
+- [ezsl-docs-site](ezsl-docs-site/) — the unified documentation site: a progressive tutorial track, live-editable code blocks, a Shadertoy-style Playground (`#/playground`) with a 33-shader gallery and shareable URLs, and an EZSL vs GLSL vs Shadertoy vs WGSL comparison tier. Live at [patrickjaillet.github.io/EZSL.js](https://patrickjaillet.github.io/EZSL.js/).
+
+## Try the unified site
+
+The live site at [patrickjaillet.github.io/EZSL.js](https://patrickjaillet.github.io/EZSL.js/) includes a progressive tutorial track, a Shadertoy-style Playground (`#/playground`) with a 33-shader gallery and shareable URLs, and an EZSL vs GLSL vs Shadertoy vs WGSL comparison tier.
 
 ## Learn more
 

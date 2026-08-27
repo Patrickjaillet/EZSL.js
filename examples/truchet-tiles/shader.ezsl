@@ -1,0 +1,27 @@
+fn hash(px, py) {
+  return fract(sin(px * 127.1 + py * 311.7) * 43758.5453)
+}
+
+fn sdCircle(px, py, r) {
+  return length([px, py]) - r
+}
+
+scale = 6.0
+grid = uv * scale
+cellId = floor(grid)
+cellPos = fract(grid) - [0.5, 0.5]
+
+flip = step(0.5, hash(cellId.x, cellId.y))
+
+flipped = mix(cellPos, [cellPos.y, cellPos.x], flip)
+
+a = flipped - [0.5, 0.5]
+b = flipped - [-0.5, -0.5]
+
+d1 = abs(sdCircle(a.x, a.y, 0.5))
+d2 = abs(sdCircle(b.x, b.y, 0.5))
+d = min(d1, d2)
+
+line = 1.0 - smoothstep(0.0, 0.04, d)
+
+color = [line, line * 0.9, line * 0.7]

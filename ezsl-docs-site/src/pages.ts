@@ -16,11 +16,16 @@ import escapeHatch from "../content/advanced/escape-hatch.md?raw";
 import threeJsScene from "../../docs/tutorials/three-js-scene.md?raw";
 import multiPassShadertoy from "../../docs/tutorials/multi-pass-shadertoy.md?raw";
 import canvas2dCompositing from "../../docs/tutorials/canvas2d-compositing.md?raw";
+import comparisonsOverview from "../content/comparisons/01-overview.md?raw";
+import syntaxSideBySide from "../content/comparisons/02-syntax-side-by-side.md?raw";
+import typeSystemsCompared from "../content/comparisons/03-type-systems-compared.md?raw";
+import uniformsAndVaryingsCompared from "../content/comparisons/04-uniforms-and-varyings-compared.md?raw";
+import multiPassCompared from "../content/comparisons/05-multi-pass-compared.md?raw";
 
 export interface Page {
   slug: string;
   title: string;
-  tier: "Beginner" | "Intermediate" | "Advanced";
+  tier: "Beginner" | "Intermediate" | "Comparisons" | "Advanced";
   markdown: string;
 }
 
@@ -33,6 +38,11 @@ export const PAGES: Page[] = [
   { slug: "three-js-scene", title: "Three.js scene", tier: "Intermediate", markdown: threeJsScene },
   { slug: "multi-pass-shadertoy", title: "Multi-pass (Shadertoy-style)", tier: "Intermediate", markdown: multiPassShadertoy },
   { slug: "canvas2d-compositing", title: "Canvas2D compositing", tier: "Intermediate", markdown: canvas2dCompositing },
+  { slug: "comparisons-overview", title: "Overview", tier: "Comparisons", markdown: comparisonsOverview },
+  { slug: "syntax-side-by-side", title: "Syntax side-by-side", tier: "Comparisons", markdown: syntaxSideBySide },
+  { slug: "type-systems-compared", title: "Type systems compared", tier: "Comparisons", markdown: typeSystemsCompared },
+  { slug: "uniforms-and-varyings-compared", title: "Uniforms & varyings compared", tier: "Comparisons", markdown: uniformsAndVaryingsCompared },
+  { slug: "multi-pass-compared", title: "Multi-pass compared", tier: "Comparisons", markdown: multiPassCompared },
   { slug: "escape-hatch", title: "The Escape Hatch", tier: "Advanced", markdown: escapeHatch },
 ];
 

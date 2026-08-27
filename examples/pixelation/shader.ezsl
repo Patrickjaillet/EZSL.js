@@ -1,0 +1,14 @@
+pixels = 24.0
+snapped = floor(uv * pixels) / pixels
+
+center = snapped - [0.5, 0.5]
+angle = atan(center.y, center.x) + time * 0.3
+radius = length(center)
+
+r = 0.5 + 0.5 * sin(angle * 3.0)
+g = 0.5 + 0.5 * sin(angle * 3.0 + 2.094)
+b = 0.5 + 0.5 * sin(angle * 3.0 + 4.188)
+
+mask = 1.0 - smoothstep(0.0, 0.5, radius)
+
+color = [r * mask, g * mask, b * mask]

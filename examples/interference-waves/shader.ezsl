@@ -1,0 +1,13 @@
+source1 = [0.3, 0.5]
+source2 = [0.7, 0.5]
+
+d1 = length(uv - source1)
+d2 = length(uv - source2)
+
+wave1 = sin(d1 * 60.0 - time * 3.0)
+wave2 = sin(d2 * 60.0 - time * 3.0)
+
+combined = (wave1 + wave2) * 0.5
+intensity = combined * 0.5 + 0.5
+
+color = [intensity * 0.3, intensity * 0.6, intensity]
