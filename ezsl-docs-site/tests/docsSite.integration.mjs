@@ -182,6 +182,21 @@ async function main() {
     if (!initialGlsl.includes("#version 300 es")) fail("initial GLSL split-view is not populated with real GLSL on the Playground route");
     else console.log("PASS: Playground route populates the GLSL split-view on load");
 
+    // The Playground is a full-screen app, not a doc page — the docs sidebar
+    // must be hidden entirely so the 4-panel editor can use the full
+    // viewport width (a real layout bug: the sidebar staying visible here
+    // squeezed the editor into a narrow, unprofessional-looking column).
+    const sidebarHiddenOnPlayground = await page.evaluate(() => getComputedStyle(document.getElementById("nav")).display === "none");
+    if (!sidebarHiddenOnPlayground) fail("expected the docs sidebar to be hidden on the Playground route");
+    else console.log("PASS: the docs sidebar is hidden on the Playground route");
+
+    const playgroundFillsWidth = await page.evaluate(() => {
+      const rect = document.getElementById("playground-app").getBoundingClientRect();
+      return rect.width > window.innerWidth * 0.95;
+    });
+    if (!playgroundFillsWidth) fail("expected the Playground app to fill the viewport width, not be squeezed next to a sidebar");
+    else console.log("PASS: the Playground app fills the full viewport width");
+
     const galleryCount = await page.evaluate(() => document.querySelectorAll(".gallery-item").length);
     if (galleryCount !== 33) fail(`expected 33 curated gallery entries (21 original + 12 new), got ${galleryCount}`);
     else console.log(`PASS: Playground gallery renders all 33 curated entries`);
@@ -259,6 +274,14 @@ async function main() {
     const navClosedAfterScrim = await page.evaluate(() => !document.getElementById("app")?.classList.contains("nav-open"));
     if (!navClosedAfterScrim) fail("clicking the nav scrim did not close the mobile nav");
     else console.log("PASS: clicking the scrim closes the mobile nav overlay");
+
+    // On mobile, the Playground route hides the (now-irrelevant) hamburger
+    // toggle too, since there's no sidebar for it to open on that route.
+    await page.evaluate(() => (window.location.hash = "#/playground"));
+    await page.waitForTimeout(800);
+    const hamburgerHiddenOnPlaygroundMobile = await page.evaluate(() => getComputedStyle(document.getElementById("nav-toggle")).display === "none");
+    if (!hamburgerHiddenOnPlaygroundMobile) fail("expected the hamburger nav toggle to be hidden on the Playground route (mobile)");
+    else console.log("PASS: the hamburger nav toggle is hidden on the Playground route on mobile");
 
     await page.setViewportSize({ width: 1200, height: 900 });
 

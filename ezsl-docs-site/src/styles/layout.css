@@ -66,6 +66,28 @@ html, body {
   line-height: 1.6;
 }
 
+/* Playground route: a full-screen app, not a doc page — the sidebar is
+   hidden entirely and #content drops its max-width/padding so the 4-panel
+   editor can use the whole viewport, like a real Shadertoy/CodePen rather
+   than sitting awkwardly next to the docs nav. The mode class lives on
+   <body> (not #app) because #nav-toggle sits in #topbar, a sibling of
+   #app, not a descendant of it — a descendant selector scoped to #app
+   alone can never match #nav-toggle regardless of specificity. */
+body.playground-mode #nav {
+  display: none;
+}
+
+body.playground-mode #content {
+  max-width: none;
+  padding: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+body.playground-mode #nav-toggle {
+  display: none;
+}
+
 @media (max-width: 900px) {
   #nav-toggle { display: block; }
 

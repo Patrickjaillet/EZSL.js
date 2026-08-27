@@ -64,13 +64,14 @@ function renderPage(slug: string): void {
         initialSource = null;
       }
     }
+    document.body.classList.add("playground-mode");
     renderPlaygroundPage(contentHost, initialSource);
-    renderNav("playground");
     window.scrollTo(0, 0);
     appEl.classList.remove("nav-open");
     return;
   }
 
+  document.body.classList.remove("playground-mode");
   const page = findPage(slug);
   if (!page) {
     contentHost.innerHTML = `<p>Page not found: <code>${slug}</code></p>`;

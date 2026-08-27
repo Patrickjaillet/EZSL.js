@@ -205,12 +205,14 @@
   .live-block-preview canvas { width: 100%; }
 }
 
-/* Playground page — full-screen 4-panel Shadertoy-style editor. */
+/* Playground page — full-screen 4-panel Shadertoy-style editor, rendered
+   inside #content but with #app.playground-mode stripping #content's own
+   max-width/padding (see layout.css) so this fills the whole viewport
+   width below the topbar, sidebar hidden entirely. */
 #playground-app {
   display: flex;
   flex-direction: column;
   height: calc(100vh - var(--topbar-height));
-  margin: calc(var(--space-6) * -1) calc(var(--space-7) * -1);
 }
 
 #playground-header {
@@ -333,7 +335,6 @@
 }
 
 @media (max-width: 900px) {
-  #playground-app { margin: calc(var(--space-5) * -1); height: calc(100vh - var(--topbar-height)); }
   #playground-main { flex-direction: column; overflow-y: auto; }
   #gallery-panel {
     width: 100%;
