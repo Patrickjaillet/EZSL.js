@@ -1,0 +1,7 @@
+center = uv - [0.5, 0.5]
+d = length(center)
+angle = atan(center.y, center.x)
+segment = 6.2832 / 6.0
+folded = abs(mod(angle, segment) - segment / 2.0)
+r = 0.5 + 0.5 * sin(folded * 10.0 + d * 20.0 - time * 2.0)
+color = [r, 1.0 - r, sin(d * 10.0) * 0.5 + 0.5]

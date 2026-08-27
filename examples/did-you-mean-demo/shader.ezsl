@@ -1,0 +1,2 @@
+x = smoothstp(0.0, 1.0, uv.x)
+color = [x, x, x]

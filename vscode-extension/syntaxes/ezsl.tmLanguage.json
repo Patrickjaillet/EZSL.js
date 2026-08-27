@@ -1,0 +1,151 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "EZSL",
+  "scopeName": "source.ezsl",
+  "fileTypes": ["ezsl"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#raw-glsl-block" },
+    { "include": "#keywords" },
+    { "include": "#function-declaration" },
+    { "include": "#struct-declaration" },
+    { "include": "#builtins" },
+    { "include": "#types" },
+    { "include": "#numbers" },
+    { "include": "#swizzle-or-method" },
+    { "include": "#operators" },
+    { "include": "#punctuation" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.ezsl",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "raw-glsl-block": {
+      "comment": "The glsl { ... } Escape Hatch (v0.2) — contents are opaque, real GLSL, and highlighted as embedded C-family-ish code via source.glsl if a GLSL grammar is installed; a self-contained fallback pattern otherwise. See docs/architecture/escape-hatch.md.",
+      "begin": "\\b(glsl)\\s*(\\{)",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.ezsl" },
+        "2": { "name": "punctuation.section.block.begin.ezsl" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.block.end.ezsl" }
+      },
+      "name": "meta.embedded.block.glsl",
+      "patterns": [{ "include": "source.glsl" }, { "include": "#raw-glsl-fallback" }]
+    },
+    "raw-glsl-fallback": {
+      "comment": "Minimal highlighting used only if the source.glsl grammar (a separate extension) isn't installed — the raw-glsl-block pattern above tries source.glsl first.",
+      "patterns": [
+        { "name": "comment.line.double-slash.glsl", "match": "//.*$" },
+        { "name": "constant.numeric.glsl", "match": "\\b\\d+\\.?\\d*\\b" },
+        {
+          "name": "storage.type.glsl",
+          "match": "\\b(float|int|bool|vec2|vec3|vec4|mat2|mat3|mat4|sampler2D|void)\\b"
+        },
+        {
+          "name": "keyword.control.glsl",
+          "match": "\\b(if|else|for|while|return|break|continue|in|out|uniform|const)\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.ezsl",
+          "match": "\\b(if|else|for|in|return)\\b"
+        }
+      ]
+    },
+    "function-declaration": {
+      "comment": "fn name(params) { ... } — v0.3 user-defined functions.",
+      "match": "\\b(fn)\\s+([A-Za-z_]\\w*)\\s*(\\()",
+      "captures": {
+        "1": { "name": "keyword.control.ezsl" },
+        "2": { "name": "entity.name.function.ezsl" },
+        "3": { "name": "punctuation.section.parens.begin.ezsl" }
+      }
+    },
+    "struct-declaration": {
+      "comment": "struct Name { field: type, ... } — v0.3 structs.",
+      "match": "\\b(struct)\\s+([A-Za-z_]\\w*)",
+      "captures": {
+        "1": { "name": "keyword.control.ezsl" },
+        "2": { "name": "entity.name.type.ezsl" }
+      }
+    },
+    "builtins": {
+      "comment": "Auto-injected fragment builtins (uv/time/resolution) and vertex-stage builtins (position/normal + Three.js camera matrices) — see CLAUDE.md's boilerplate-injection section and docs/architecture/three-integration.md.",
+      "patterns": [
+        {
+          "name": "variable.language.ezsl",
+          "match": "\\b(uv|time|resolution|position|normal|modelMatrix|modelViewMatrix|projectionMatrix|normalMatrix|color|glPosition)\\b"
+        }
+      ]
+    },
+    "types": {
+      "comment": "Type-constructor/cast call names — vec2/vec3/vec4/mat2/mat3/mat4/float/int/bool, and the array[...] literal keyword (v0.3 fixed-size arrays).",
+      "patterns": [
+        {
+          "name": "support.type.ezsl",
+          "match": "\\b(float|int|bool|vec2|vec3|vec4|mat2|mat3|mat4|array)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.ezsl",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "swizzle-or-method": {
+      "comment": "`.identifier` — either a swizzle (.xyz, .rgba) or, followed by (...), a method call (BufferName.sample(uv) — v0.5 multi-pass). Highlighted the same either way; semantic distinction is the compiler's job, not the grammar's.",
+      "match": "(\\.)([A-Za-z_]\\w*)",
+      "captures": {
+        "1": { "name": "punctuation.accessor.ezsl" },
+        "2": { "name": "variable.other.property.ezsl" }
+      }
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.ezsl",
+          "match": "(==|<=|>=|\\.\\.|[+\\-*/=<>])"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.separator.comma.ezsl", "match": "," },
+        { "name": "punctuation.separator.colon.ezsl", "match": ":" },
+        { "name": "punctuation.section.parens.begin.ezsl", "match": "\\(" },
+        { "name": "punctuation.section.parens.end.ezsl", "match": "\\)" },
+        { "name": "punctuation.section.brackets.begin.ezsl", "match": "\\[" },
+        { "name": "punctuation.section.brackets.end.ezsl", "match": "\\]" },
+        { "name": "punctuation.section.block.begin.ezsl", "match": "\\{" },
+        { "name": "punctuation.section.block.end.ezsl", "match": "\\}" }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "comment": "A call — identifier immediately followed by ( — vs. a plain identifier reference (local variable or implicit uniform).",
+          "match": "\\b([A-Za-z_]\\w*)\\s*(?=\\()",
+          "name": "entity.name.function.ezsl"
+        },
+        {
+          "name": "variable.other.ezsl",
+          "match": "\\b[A-Za-z_]\\w*\\b"
+        }
+      ]
+    }
+  }
+}

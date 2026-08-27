@@ -1,0 +1,5 @@
+center = uv - [0.5, 0.5]
+edgeX = smoothstep(0.28, 0.3, abs(center.x))
+edgeY = smoothstep(0.28, 0.3, abs(center.y))
+inside = 1.0 - max(edgeX, edgeY)
+color = [inside, inside * 0.5, inside * 0.9]

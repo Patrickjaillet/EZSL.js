@@ -1,0 +1,29 @@
+{
+  "name": "ezsl-playground",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser-based EZSL.js editor + live WebGL2 preview + shareable shader URLs",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js --config jest.config.js",
+    "test:integration": "node tests/playground.integration.mjs"
+  },
+  "license": "MIT",
+  "author": "Patrick JAILLET",
+  "dependencies": {
+    "@patrickjaillet/ezsl": "file:..",
+    "codemirror": "^6.0.1",
+    "@codemirror/lang-cpp": "^6.0.2",
+    "@codemirror/theme-one-dark": "^6.1.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "@types/jest": "^29.5.14"
+  }
+}

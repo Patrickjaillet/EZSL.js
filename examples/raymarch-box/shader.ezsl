@@ -1,0 +1,24 @@
+ro = [0.0, 0.0, -3.0]
+centered = uv - [0.5, 0.5]
+rd = normalize([centered.x, centered.y, 1.0])
+
+t = 0.0
+hit = 0.0
+
+for i in 0..64 {
+  p = ro + rd * t
+  q = [abs(p.x), abs(p.y), abs(p.z)] - [0.6, 0.6, 0.6]
+  qx = max(q.x, 0.0)
+  qy = max(q.y, 0.0)
+  qz = max(q.z, 0.0)
+  outsideDist = length([qx, qy, qz])
+  insideDist = min(max(q.x, max(q.y, q.z)), 0.0)
+  d = outsideDist + insideDist
+  if d < 0.001 {
+    hit = 1.0
+  }
+  t = t + d * 0.5
+}
+
+shade = 1.0 - t * 0.15
+color = [hit * shade * 0.9, hit * shade, hit * shade * 0.6]

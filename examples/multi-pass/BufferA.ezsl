@@ -1,0 +1,9 @@
+prevColor = BufferA.sample(uv)
+faded = prevColor.rgb * 0.92
+
+center = [0.5 + 0.3 * cos(time), 0.5 + 0.3 * sin(time)]
+d = length(uv - center)
+dot0 = 1.0 - smoothstep(0.03, 0.05, d)
+
+trail = [faded.x + dot0, faded.y + dot0 * 0.4, faded.z + dot0 * 0.8]
+color = trail

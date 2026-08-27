@@ -1,0 +1,24 @@
+struct Light {
+  position: vec2,
+  weight: float
+}
+
+fn falloff(d) {
+  return 1.0 / (1.0 + d * d * 40.0)
+}
+
+rot = mat2(cos(time), -sin(time), sin(time), cos(time))
+centered = (uv - [0.5, 0.5]) * rot
+
+weights = array[1.0, 0.6, 0.3]
+
+l0 = Light([0.3, 0.3], weights[0])
+l1 = Light([-0.3, 0.2], weights[1])
+l2 = Light([0.0, -0.35], weights[2])
+
+total = 0.0
+total = total + falloff(length(centered - l0.position)) * l0.weight
+total = total + falloff(length(centered - l1.position)) * l1.weight
+total = total + falloff(length(centered - l2.position)) * l2.weight
+
+color = [total, total * 0.6, total * 0.9]

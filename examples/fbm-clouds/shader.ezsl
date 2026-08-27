@@ -1,0 +1,14 @@
+p = uv * 3.0
+total = 0.0
+amp = 0.5
+freq = 1.0
+
+for i in 0..4 {
+  point = p * freq + [time * 0.05 * freq, 0.0]
+  h = fract(sin(dot(point, [12.9898, 78.233])) * 43758.5453)
+  total = total + h * amp
+  amp = amp * 0.5
+  freq = freq * 2.0
+}
+
+color = [total, total, total]

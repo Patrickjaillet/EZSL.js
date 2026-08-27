@@ -1,0 +1,5 @@
+scaled = uv * 10.0
+cellUv = fract(scaled) - [0.5, 0.5]
+d = length(cellUv)
+dot0 = 1.0 - smoothstep(0.15, 0.18, d)
+color = [dot0, dot0, dot0]

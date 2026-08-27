@@ -1,0 +1,79 @@
+{
+  "name": "@patrickjaillet/ezsl",
+  "version": "1.0.0",
+  "description": "Easy Shader Language for JavaScript — a DSL/abstraction layer on top of GLSL",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "ezsl": "dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run typecheck && npm run build && npm test && npm run check-api-diff",
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "cli": "node dist/cli/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "example:gradient": "vite examples/gradient",
+    "example:circle": "vite examples/circle",
+    "example:plasma": "vite examples/plasma",
+    "example:noise": "vite examples/noise",
+    "example:raymarch": "vite examples/raymarch",
+    "example:checkerboard": "vite examples/checkerboard",
+    "example:stripes": "vite examples/stripes",
+    "example:vignette": "vite examples/vignette",
+    "example:rings": "vite examples/rings",
+    "example:square": "vite examples/square",
+    "example:pulse": "vite examples/pulse",
+    "example:swirl": "vite examples/swirl",
+    "example:waves": "vite examples/waves",
+    "example:crosshatch": "vite examples/crosshatch",
+    "example:heart": "vite examples/heart",
+    "example:colorwheel": "vite examples/colorwheel",
+    "example:dots": "vite examples/dots",
+    "example:starburst": "vite examples/starburst",
+    "example:fbm-clouds": "vite examples/fbm-clouds",
+    "example:raymarch-box": "vite examples/raymarch-box",
+    "example:kaleidoscope": "vite examples/kaleidoscope",
+    "example:escape-hatch": "vite examples/escape-hatch",
+    "example:type-system": "vite examples/type-system",
+    "example:error-demo": "vite examples/error-demo",
+    "example:multi-pass": "vite examples/multi-pass",
+    "example:did-you-mean-demo": "vite examples/did-you-mean-demo",
+    "example:three-integration": "vite examples/three-integration",
+    "example:canvas2d-interop": "vite examples/canvas2d-interop",
+    "test:integration": "node tests/integration/run.mjs",
+    "benchmark": "node tests/benchmark/run.mjs",
+    "check-api-diff": "node scripts/checkApiDiff.mjs",
+    "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "fuzz": "node tests/fuzz/fuzzParser.mjs"
+  },
+  "license": "MIT",
+  "author": "Patrick JAILLET",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.2",
+    "@types/three": "^0.185.4",
+    "jest": "^29.7.0",
+    "playwright": "^1.62.1",
+    "three": "^0.185.1",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}

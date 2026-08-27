@@ -1,0 +1,7 @@
+x = 1.0
+
+glsl {
+  float half = 2.0;
+}
+
+color = [x, x, x]

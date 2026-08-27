@@ -1,0 +1,4 @@
+center = uv - [0.5, 0.5]
+d = length(center)
+edge = 1.0 - smoothstep(0.29, 0.31, d)
+color = [edge, edge * 0.6, 1.0 - edge]

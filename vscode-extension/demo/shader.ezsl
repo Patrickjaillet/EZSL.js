@@ -1,0 +1,3 @@
+d = length(uv - 0.5)
+trail = vec3(d, d, d)
+color = [trail.x, trail.y, 1.0 - d]

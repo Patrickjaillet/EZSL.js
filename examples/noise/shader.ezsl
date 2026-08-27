@@ -1,0 +1,3 @@
+p = uv * 8.0 + [time * 0.2, time * 0.1]
+h = fract(sin(dot(p, [12.9898, 78.233])) * 43758.5453)
+color = [h, h, h]

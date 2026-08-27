@@ -1,0 +1,3 @@
+wave = sin(position.x * 4.0 + time * 2.0) * 0.15
+displaced = position + normal * wave
+glPosition = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0)

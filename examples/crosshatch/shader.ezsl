@@ -1,0 +1,6 @@
+scaled = uv * 20.0
+lineA = fract(scaled.x + scaled.y)
+lineB = fract(scaled.x - scaled.y)
+mask = min(lineA, lineB)
+line = smoothstep(0.0, 0.1, mask)
+color = [line, line, line]

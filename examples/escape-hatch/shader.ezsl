@@ -1,0 +1,11 @@
+center = uv - [0.5, 0.5]
+d = length(center)
+ripple = 0.0
+
+glsl {
+#define RIPPLE_FREQ 30.0
+  ripple = 0.5 + 0.5 * sin(d * RIPPLE_FREQ - time * 3.0);
+}
+
+base = hueShift(ripple)
+color = [base.x, base.y, base.z]

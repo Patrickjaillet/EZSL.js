@@ -1,0 +1,7 @@
+scaled = uv * 8.0
+cellX = floor(scaled.x)
+cellY = floor(scaled.y)
+total = cellX + cellY
+halved = total / 2.0
+parity = total - floor(halved) * 2.0
+color = [parity, parity, parity]
