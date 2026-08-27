@@ -48,7 +48,6 @@ mount(document.querySelector("canvas"), program);
 - `docs/EZSL_LANGUAGE_SPECIFICATION_v1.0.md` — the normative language specification.
 - `docs/tutorials/three-js-scene.md`, `docs/tutorials/multi-pass-shadertoy.md`, `docs/tutorials/canvas2d-compositing.md` — guided walkthroughs of each framework integration.
 - `docs/API_STABILITY.md` — the frozen public API surface and this project's breaking-change/deprecation policy.
-- `ROADMAP.md` — the full, honestly-annotated feature history: every shipped item is checked off with a note on how it was actually validated, not just that it exists.
 
 ## Validation
 
