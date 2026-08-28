@@ -14,7 +14,7 @@ import {
   TypeScope,
   TYPE_CONSTRUCTORS,
 } from "./typeInference.js";
-import type { ShaderStage } from "./typeInference.js";
+import type { ShaderStage, VertexTarget } from "./typeInference.js";
 import type { ResolvedType } from "./types.js";
 import { glslTypeName, resolvedTypesEqual, scalarType } from "./types.js";
 import { didYouMean } from "./didYouMean.js";
@@ -55,6 +55,18 @@ export interface CompileOptions {
   stage?: ShaderStage;
   /** The statement name treated as this program's required output. Defaults to `"color"`. Only `compileVertex()` overrides this (to `"glPosition"`) — see `stage`. */
   outputName?: string;
+  /**
+   * Which vertex-builtin scope to use when `stage === "vertex"` (Babylon
+   * integration — see docs/architecture/babylon-integration.md). Ignored
+   * when `stage === "fragment"`. Defaults to `"three"`, matching v0.6's
+   * original, single-target vertex support — every pre-Babylon-integration
+   * call site is unaffected. Internal only, same reasoning as `stage`:
+   * `compileEzslVertex()`'s public signature gains a `target` parameter
+   * instead of exposing this directly, since the *result* type doesn't
+   * change per-target (both produce a `VertexProgram`), so no separate
+   * public wrapper function is needed, just a parameter.
+   */
+  vertexTarget?: VertexTarget;
   /**
    * Debug/tooling hook (v0.7, VS Code extension hover support — see
    * `docs/architecture/vscode-extension.md`), called once for every new
@@ -141,7 +153,8 @@ function describeType(type: ResolvedType): string {
 export function compile(ast: AstProgram, options: CompileOptions = {}): CodegenProgram {
   const stage: ShaderStage = options.stage ?? "fragment";
   const outputName = options.outputName ?? "color";
-  const scope = new TypeScope(stage);
+  const vertexTarget: VertexTarget = options.vertexTarget ?? "three";
+  const scope = new TypeScope(stage, vertexTarget);
   const uniforms = new Map<string, Uniform>();
   const customFunctions = new Map<string, CustomFunction>();
   const structs = new Map<string, StructDeclaration>();
@@ -659,7 +672,7 @@ export function compile(ast: AstProgram, options: CompileOptions = {}): CodegenP
       throw new CompileError(`'${decl.name}' is a reserved GLSL keyword and cannot be used as a function name`, decl.pos.line, decl.pos.column);
     }
 
-    const fnScope = TypeScope.withBuiltinsOnly(stage);
+    const fnScope = TypeScope.withBuiltinsOnly(stage, vertexTarget);
     const fnUniforms = new Map<string, Uniform>(); // uniforms referenced inside a function body are folded into the outer program's uniforms below
     for (const param of decl.params) {
       if (isReservedGlslWord(param)) {

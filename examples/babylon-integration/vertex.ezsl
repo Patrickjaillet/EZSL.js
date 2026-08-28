@@ -1,0 +1,5 @@
+camDist = length(cameraPosition)
+amplitude = 0.05 + 0.05 * (camDist - 3.0)
+wave = sin(position.x * 4.0 + time * 2.0) * amplitude
+displaced = position + normal * wave
+glPosition = worldViewProjection * vec4(displaced, 1.0)

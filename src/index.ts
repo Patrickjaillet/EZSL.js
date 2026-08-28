@@ -3,8 +3,9 @@ export {
   generateFragmentShaderMapped,
   generateVertexShader,
   generateThreeVertexShaderMapped,
+  generateBabylonVertexShaderMapped,
 } from "./codegen/glslGenerator.js";
-export type { SourceMap, GeneratedFragmentShader } from "./codegen/glslGenerator.js";
+export type { SourceMap, GeneratedFragmentShader, GeneratedHostVertexShader } from "./codegen/glslGenerator.js";
 export { mount, mountToCanvas2D } from "./runtime/bootstrap.js";
 export type { EzslRuntimeHandle, MountOptions, Canvas2DHandle, MountToCanvas2DOptions } from "./runtime/bootstrap.js";
 export { createPipeline, PipelineError } from "./runtime/pipeline.js";
@@ -23,6 +24,7 @@ export {
   collectVariableDeclarations,
 } from "./compiler/index.js";
 export type { CompileOptions, CustomFunction, VariableDeclaration } from "./compiler/index.js";
+export type { VertexTarget } from "./compiler/typeInference.js";
 export { createThreeMaterial } from "./integrations/three.js";
 export type {
   ThreeShaderMaterialLike,
@@ -30,6 +32,13 @@ export type {
   CreateThreeMaterialOptions,
   ThreeMaterialHandle,
 } from "./integrations/three.js";
+export { createBabylonMaterial, dispatchBabylonUniform } from "./integrations/babylon.js";
+export type {
+  BabylonShaderMaterialLike,
+  BabylonShaderMaterialConstructor,
+  CreateBabylonMaterialOptions,
+  BabylonMaterialHandle,
+} from "./integrations/babylon.js";
 export type { Token, TokenType } from "./lexer/tokens.js";
 export type * as Ast from "./parser/ast.js";
 export {

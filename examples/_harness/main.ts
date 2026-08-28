@@ -1,9 +1,12 @@
 import * as THREE from "three";
-import { compileEzsl, createPipeline, createThreeMaterial, defineFunction, mount, mountToCanvas2D } from "../../src/index.js";
+import * as BABYLON from "@babylonjs/core";
+import { compileEzsl, createPipeline, createThreeMaterial, createBabylonMaterial, defineFunction, mount, mountToCanvas2D } from "../../src/index.js";
 import multiPassBufferASource from "../multi-pass/BufferA.ezsl?raw";
 import multiPassImageSource from "../multi-pass/Image.ezsl?raw";
 import threeVertexSource from "../three-integration/vertex.ezsl?raw";
 import threeFragmentSource from "../three-integration/fragment.ezsl?raw";
+import babylonVertexSource from "../babylon-integration/vertex.ezsl?raw";
+import babylonFragmentSource from "../babylon-integration/fragment.ezsl?raw";
 
 const shaderModules = import.meta.glob("../*/shader.ezsl", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 
@@ -98,6 +101,36 @@ try {
 } catch (err) {
   results.push({
     name: "three-integration",
+    ok: false,
+    expectedToFail: false,
+    error: err instanceof Error ? err.message : String(err),
+  });
+}
+
+// babylon-integration/ isn't a single shader.ezsl either (vertex.ezsl +
+// fragment.ezsl compiled via createBabylonMaterial), so it's exercised
+// separately here too, the same way three-integration/ is above.
+try {
+  const engine = new BABYLON.Engine(document.createElement("canvas"), true);
+  const scene = new BABYLON.Scene(engine);
+  // scene.render() throws "No camera defined" with no active camera in the
+  // scene — a real, minimal requirement the standalone example (which uses
+  // an ArcRotateCamera) already satisfies but this harness smoke-check
+  // needs to set up explicitly too.
+  new BABYLON.ArcRotateCamera("harness-camera", Math.PI / 3, Math.PI / 3, 3, BABYLON.Vector3.Zero(), scene);
+  const { material } = createBabylonMaterial(BABYLON.ShaderMaterial, {
+    name: "harness-babylon-material",
+    scene,
+    vertexSource: babylonVertexSource,
+    fragmentSource: babylonFragmentSource,
+  });
+  const sphere = BABYLON.MeshBuilder.CreateSphere("harness-sphere", { diameter: 1 }, scene);
+  sphere.material = material;
+  scene.render();
+  results.push({ name: "babylon-integration", ok: true, expectedToFail: false });
+} catch (err) {
+  results.push({
+    name: "babylon-integration",
     ok: false,
     expectedToFail: false,
     error: err instanceof Error ? err.message : String(err),

@@ -69,6 +69,7 @@
     "example:interference-waves": "vite examples/interference-waves",
     "example:truchet-tiles": "vite examples/truchet-tiles",
     "example:glow-lines": "vite examples/glow-lines",
+    "example:babylon-integration": "vite examples/babylon-integration",
     "test:integration": "node tests/integration/run.mjs",
     "benchmark": "node tests/benchmark/run.mjs",
     "check-api-diff": "node scripts/checkApiDiff.mjs",
@@ -78,6 +79,7 @@
   "license": "MIT",
   "author": "Patrick JAILLET",
   "devDependencies": {
+    "@babylonjs/core": "^9.23.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
     "@types/three": "^0.185.4",

@@ -31,6 +31,36 @@ export interface GeneratedFragmentShader {
 }
 
 /**
+ * A vertex codegen result for a host (Three.js/Babylon.js) whose material
+ * API needs to know which of its own builtin attribute/uniform names the
+ * compiled shader actually references — Babylon's integration specifically
+ * (see src/integrations/babylon.ts) needs this to build the `attributes`/
+ * `uniforms` arrays its `ShaderMaterial` constructor requires; a missing
+ * name there is a silent runtime failure (the value is just never bound),
+ * not a compile error, so this is exposed rather than making the caller
+ * re-derive it by re-scanning the generated source text a second time.
+ */
+export interface GeneratedHostVertexShader extends GeneratedFragmentShader {
+  referencedAttributes: string[];
+  referencedUniforms: string[];
+}
+
+/**
+ * Filters `candidateNames` down to the ones that actually appear (as a
+ * whole identifier, not a substring) in `glslText`. Shared by
+ * `generateThreeVertexShaderMapped`/`generateBabylonVertexShaderMapped` —
+ * both hosts supply builtin attributes/uniforms automatically, but
+ * `program.uniforms`/`program.body` only ever contains *EZSL-declared*
+ * names (see docs/architecture/three-integration.md's/
+ * docs/architecture/babylon-integration.md's own notes on this), so the
+ * only way to know which host builtins a given compiled program actually
+ * uses is to scan its generated GLSL text directly.
+ */
+function referencedBuiltinNames(glslText: string, candidateNames: readonly string[]): string[] {
+  return candidateNames.filter((name) => new RegExp(`\\b${name}\\b`).test(glslText));
+}
+
+/**
  * Generates GLSL ES 3.00 (WebGL2) fragment shader source from a Program
  * AST, plus its GLSL-line -> `.ezsl`-line source map. `includeVersionDirective`
  * (default `true`) controls whether the leading `#version 300 es` line is
@@ -117,7 +147,7 @@ export function generateThreeVertexShaderMapped(program: VertexProgram, includeV
   // *EZSL*-declared uniforms (see compile.ts), so Three.js builtins never
   // appear there and must be found by scanning the compiled GLSL text instead.
   const allGlsl = [program.outPosition.glsl, ...program.body.map((l) => l.glsl)].join("\n");
-  const referencedThreeBuiltins = [...threeBuiltinNames].filter((name) => new RegExp(`\\b${name}\\b`).test(allGlsl));
+  const referencedThreeBuiltins = referencedBuiltinNames(allGlsl, [...threeBuiltinNames]);
 
   const userUniforms = program.uniforms.map((u) => `uniform ${u.type} ${u.glslName};`);
 
@@ -141,4 +171,78 @@ export function generateThreeVertexShaderMapped(program: VertexProgram, includeV
   lines.forEach((l, i) => sourceMap.set(i + 1, l.ezslLine));
 
   return { source, sourceMap };
+}
+
+const BABYLON_VERTEX_ATTRIBUTE_NAMES = ["position", "normal", "uv"] as const;
+const BABYLON_VERTEX_ATTRIBUTE_DECLARATIONS: Record<string, string> = {
+  position: "in vec3 position;",
+  normal: "in vec3 normal;",
+  uv: "in vec2 uv;",
+};
+
+const BABYLON_VERTEX_UNIFORM_NAMES = ["world", "worldView", "worldViewProjection", "view", "projection", "viewProjection", "cameraPosition"] as const;
+const BABYLON_VERTEX_UNIFORM_DECLARATIONS: Record<string, string> = {
+  world: "uniform mat4 world;",
+  worldView: "uniform mat4 worldView;",
+  worldViewProjection: "uniform mat4 worldViewProjection;",
+  view: "uniform mat4 view;",
+  projection: "uniform mat4 projection;",
+  viewProjection: "uniform mat4 viewProjection;",
+  cameraPosition: "uniform vec3 cameraPosition;",
+};
+
+/**
+ * Generates GLSL ES 3.00 vertex shader source for Babylon.js (Babylon
+ * integration — see docs/architecture/babylon-integration.md). Unlike
+ * `generateThreeVertexShaderMapped`, this NEVER emits a `#version` line
+ * and has **no `includeVersionDirective` parameter at all** — confirmed
+ * against `@babylonjs/core@9.23.0`'s real source, Babylon's shader
+ * processor unconditionally strips any `#version 3` line found in input
+ * source, and the real WebGL2 engine always prepends its own
+ * `#version 300 es\n#define WEBGL2 \n` at actual compile time — there is
+ * no flag or option to suppress or override this. Unlike Three's
+ * deliberate opt-out flag (`includeVersionDirective: false`, chosen
+ * because Three supplies its own correctly-placed version line instead),
+ * EZSL simply must never produce this line for Babylon at all. This
+ * asymmetry with `generateThreeVertexShaderMapped` is intentional, not an
+ * oversight.
+ *
+ * `position`/`normal`/`uv` are declared as `in` attributes only if
+ * actually referenced (Babylon's own vertex attribute names — real mesh
+ * UV data for `uv`, distinct from fragment-stage `uv`'s `gl_FragCoord`
+ * derivation); Babylon's own `world`/`worldView`/`worldViewProjection`/
+ * `view`/`projection`/`viewProjection`/`cameraPosition` uniforms are
+ * declared under their real names — no `u_` prefix, since Babylon's
+ * `ShaderMaterial` populates these itself every frame, but **only if
+ * their name is also listed in the material's `options.uniforms` array at
+ * construction time** — see `src/integrations/babylon.ts`, which is why
+ * this function returns `referencedAttributes`/`referencedUniforms`
+ * rather than leaving the caller to re-derive them by re-scanning the
+ * generated text a second time.
+ */
+export function generateBabylonVertexShaderMapped(program: VertexProgram): GeneratedHostVertexShader {
+  const allGlsl = [program.outPosition.glsl, ...program.body.map((l) => l.glsl)].join("\n");
+  const referencedAttributes = referencedBuiltinNames(allGlsl, BABYLON_VERTEX_ATTRIBUTE_NAMES);
+  const referencedUniforms = referencedBuiltinNames(allGlsl, BABYLON_VERTEX_UNIFORM_NAMES);
+
+  const userUniforms = program.uniforms.map((u) => `uniform ${u.type} ${u.glslName};`);
+
+  const lines: SourceMappedLine[] = [];
+  const push = (glsl: string, ezslLine: number | null = null) => lines.push({ glsl, ezslLine });
+
+  for (const name of referencedAttributes) push(BABYLON_VERTEX_ATTRIBUTE_DECLARATIONS[name]);
+  for (const name of referencedUniforms) push(BABYLON_VERTEX_UNIFORM_DECLARATIONS[name]);
+  for (const u of userUniforms) push(u);
+  push("");
+  push("void main() {");
+  for (const bodyLine of program.body) push(bodyLine.glsl, bodyLine.ezslLine);
+  push(`  gl_Position = ${program.outPosition.glsl};`);
+  push("}");
+  push("");
+
+  const source = lines.map((l) => l.glsl).join("\n");
+  const sourceMap = new Map<number, number | null>();
+  lines.forEach((l, i) => sourceMap.set(i + 1, l.ezslLine));
+
+  return { source, sourceMap, referencedAttributes, referencedUniforms };
 }
