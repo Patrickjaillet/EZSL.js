@@ -14,6 +14,7 @@ import functionsStructsArrays from "../content/beginner/04-functions-structs-arr
 import builtinsAndUniforms from "../content/beginner/05-builtins-and-uniforms.md?raw";
 import escapeHatch from "../content/advanced/escape-hatch.md?raw";
 import threeJsScene from "../../docs/tutorials/three-js-scene.md?raw";
+import babylonJsScene from "../../docs/tutorials/babylon-js-scene.md?raw";
 import multiPassShadertoy from "../../docs/tutorials/multi-pass-shadertoy.md?raw";
 import canvas2dCompositing from "../../docs/tutorials/canvas2d-compositing.md?raw";
 import comparisonsOverview from "../content/comparisons/01-overview.md?raw";
@@ -36,6 +37,7 @@ export const PAGES: Page[] = [
   { slug: "functions-structs-arrays", title: "4. Functions, structs, arrays", tier: "Beginner", markdown: functionsStructsArrays },
   { slug: "builtins-and-uniforms", title: "5. Builtins and uniforms", tier: "Beginner", markdown: builtinsAndUniforms },
   { slug: "three-js-scene", title: "Three.js scene", tier: "Intermediate", markdown: threeJsScene },
+  { slug: "babylon-js-scene", title: "Babylon.js scene", tier: "Intermediate", markdown: babylonJsScene },
   { slug: "multi-pass-shadertoy", title: "Multi-pass (Shadertoy-style)", tier: "Intermediate", markdown: multiPassShadertoy },
   { slug: "canvas2d-compositing", title: "Canvas2D compositing", tier: "Intermediate", markdown: canvas2dCompositing },
   { slug: "comparisons-overview", title: "Overview", tier: "Comparisons", markdown: comparisonsOverview },

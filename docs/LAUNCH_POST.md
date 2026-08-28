@@ -40,7 +40,7 @@ The raw driver text is always still shown alongside, never hidden — the goal i
 ## Built for real use, not just toy shaders
 
 - **Shadertoy-style multi-pass rendering** — named buffer passes, `BufferName.sample(uv)`, automatic dependency ordering, real cycle detection before any WebGL context even exists, and ping-pong feedback buffers for accumulation effects.
-- **Framework integrations** — a Three.js bridge (`createThreeMaterial`, with real vertex-stage EZSL authoring) and Canvas2D compositing (`mountToCanvas2D`, for layering shader output with ordinary 2D drawing calls like `fillText`).
+- **Framework integrations** — a Three.js bridge (`createThreeMaterial`, with real vertex-stage EZSL authoring), a Babylon.js bridge (`createBabylonMaterial`, same vertex-stage authoring adapted to Babylon's own real builtin names and typed uniform-setter API), and Canvas2D compositing (`mountToCanvas2D`, for layering shader output with ordinary 2D drawing calls like `fillText`).
 - **A full developer-tooling story** — a CLI (`ezsl build`/`check`/`watch`) for compiling outside the browser, a live-reload dev server (`ezsl dev`) that hot-swaps a newly compiled shader into an already-running WebGL2 context with no full page reload, real DevTools stack-trace integration, and a VS Code extension with syntax highlighting and inferred-type hover tooltips.
 - **An experimental WebGPU/WGSL target** — a WGSL code generator sharing the same compiled program representation as the GLSL path. It's honestly labeled experimental: no real `GPUDevice` was available to validate against during development, so it's tested on generated-text structure only, not a real WebGPU compile.
 
@@ -53,7 +53,7 @@ Two companion packages, each independently useful:
 
 ## How this was actually validated
 
-Every claim above is backed by more than "the tests pass." The full pipeline — and every one of the 28 example programs shipped in `examples/` — is confirmed to compile, link, and render correctly in real browser engines: Chromium, Firefox, WebKit, and Edge, via Playwright, not just Node-side assertions on generated GLSL text. The live-reload dev server's hot-swap, the DevTools stack-trace resolution, and the VS Code extension's hover tooltips were each confirmed in real running sessions, not just unit-tested in isolation. The transpiler core carries 97%+ statement coverage, a hand-rolled parser fuzzer found and fixed a real stack-overflow crash on deeply-nested input, and a manual security review found and fixed a real path-traversal vulnerability in the dev server's static-file route before this release. None of that is a claim you have to take on faith — `docs/architecture/` in the repository documents each one, including the bugs found along the way.
+Every claim above is backed by more than "the tests pass." The full pipeline — and every one of the 41 example programs shipped in `examples/` — is confirmed to compile, link, and render correctly in real browser engines: Chromium, Firefox, WebKit, and Edge, via Playwright, not just Node-side assertions on generated GLSL text. The live-reload dev server's hot-swap, the DevTools stack-trace resolution, and the VS Code extension's hover tooltips were each confirmed in real running sessions, not just unit-tested in isolation. The transpiler core carries 97%+ statement coverage, a hand-rolled parser fuzzer found and fixed a real stack-overflow crash on deeply-nested input, and a manual security review found and fixed a real path-traversal vulnerability in the dev server's static-file route before this release. None of that is a claim you have to take on faith — `docs/architecture/` in the repository documents each one, including the bugs found along the way.
 
 ## Try it
 
@@ -61,7 +61,7 @@ Every claim above is backed by more than "the tests pass." The full pipeline —
 npm install @patrickjaillet/ezsl
 ```
 
-Or clone the repository and run any of the ~28 bundled examples locally — see the [README](https://github.com/Patrickjaillet/EZSL.js) for the full list. If you want a guided walkthrough of a specific integration, there are tutorials for [Three.js](https://github.com/Patrickjaillet/EZSL.js/blob/master/docs/tutorials/three-js-scene.md), [multi-pass/Shadertoy-style rendering](https://github.com/Patrickjaillet/EZSL.js/blob/master/docs/tutorials/multi-pass-shadertoy.md), and [Canvas2D compositing](https://github.com/Patrickjaillet/EZSL.js/blob/master/docs/tutorials/canvas2d-compositing.md).
+Or clone the repository and run any of the ~41 bundled examples locally — see the [README](https://github.com/Patrickjaillet/EZSL.js) for the full list. If you want a guided walkthrough of a specific integration, there are tutorials for [Three.js](https://github.com/Patrickjaillet/EZSL.js/blob/master/docs/tutorials/three-js-scene.md), [multi-pass/Shadertoy-style rendering](https://github.com/Patrickjaillet/EZSL.js/blob/master/docs/tutorials/multi-pass-shadertoy.md), and [Canvas2D compositing](https://github.com/Patrickjaillet/EZSL.js/blob/master/docs/tutorials/canvas2d-compositing.md).
 
 ---
 

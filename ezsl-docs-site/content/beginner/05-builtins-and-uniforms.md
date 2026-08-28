@@ -43,6 +43,7 @@ A mistake caught by EZSL itself (before any GLSL is generated) throws a `Compile
 You've now covered the beginner track. From here:
 
 - **[Intermediate: Three.js integration →](../intermediate/three-js-scene.md)** — use EZSL to author both the vertex and fragment shaders of a real Three.js material.
+- **[Intermediate: Babylon.js integration →](../intermediate/babylon-js-scene.md)** — the same idea, adapted to Babylon.js's own real API (typed uniform setters, `worldViewProjection`, `cameraPosition`, and other genuine differences from Three.js).
 - **[Intermediate: Shadertoy-style multi-pass →](../intermediate/multi-pass-shadertoy.md)** — feedback buffers and multi-pass rendering.
 - **[Intermediate: Canvas2D compositing →](../intermediate/canvas2d-compositing.md)** — layer a shader with ordinary 2D drawing.
 - **[Advanced: the Escape Hatch →](../advanced/escape-hatch.md)** — drop into raw GLSL when EZSL doesn't have the syntax you need yet.

@@ -68,7 +68,7 @@ async function main() {
     if (helloLiveBlocks !== 1) fail(`expected 1 live block on hello-gradient, got ${helloLiveBlocks}`);
     else console.log("PASS: hello-gradient page mounts exactly 1 live block");
 
-    // The 4-tier nav renders all 14 pages, correctly grouped, plus the
+    // The 4-tier nav renders all 15 pages, correctly grouped, plus the
     // always-visible Playground link outside the tier loop.
     const navLinks = await page.evaluate(() => Array.from(document.querySelectorAll(".nav-link")).map((a) => a.textContent));
     const expectedTitles = [
@@ -78,6 +78,7 @@ async function main() {
       "4. Functions, structs, arrays",
       "5. Builtins and uniforms",
       "Three.js scene",
+      "Babylon.js scene",
       "Multi-pass (Shadertoy-style)",
       "Canvas2D compositing",
       "Overview",
@@ -88,8 +89,8 @@ async function main() {
       "The Escape Hatch",
     ];
     const navMatches = navLinks.length === expectedTitles.length && expectedTitles.every((t, i) => navLinks[i] === t);
-    if (!navMatches) fail(`nav links do not match expected 14-page, 4-tier structure: ${JSON.stringify(navLinks)}`);
-    else console.log("PASS: nav renders all 14 pages across Beginner/Intermediate/Comparisons/Advanced tiers, in order");
+    if (!navMatches) fail(`nav links do not match expected 15-page, 4-tier structure: ${JSON.stringify(navLinks)}`);
+    else console.log("PASS: nav renders all 15 pages across Beginner/Intermediate/Comparisons/Advanced tiers, in order");
 
     const playgroundNavLink = await page.evaluate(() => document.querySelector(".nav-playground-link")?.textContent);
     if (playgroundNavLink !== "Playground") fail(`expected a Playground nav link, got ${JSON.stringify(playgroundNavLink)}`);
@@ -136,6 +137,14 @@ async function main() {
     const staticCodeBlocks = await page.evaluate(() => document.querySelectorAll("#content pre code").length);
     if (staticCodeBlocks < 1) fail("expected at least one static (non-ezsl) code block on three-js-scene page");
     else console.log(`PASS: three-js-scene page also renders ${staticCodeBlocks} static (non-live) code block(s) correctly`);
+
+    // Same check for the new Babylon.js tutorial (also loaded directly from
+    // docs/tutorials/, not duplicated).
+    await page.evaluate(() => (window.location.hash = "#/babylon-js-scene"));
+    await page.waitForTimeout(800);
+    const babylonJsLiveBlocks = await page.evaluate(() => document.querySelectorAll(".live-block").length);
+    if (babylonJsLiveBlocks !== 2) fail(`expected 2 live blocks (vertex+fragment) on babylon-js-scene, got ${babylonJsLiveBlocks}`);
+    else console.log("PASS: babylon-js-scene (loaded from docs/tutorials/, not duplicated) mounts exactly 2 live blocks");
 
     // Cross-linking: the "What's next" link on a beginner page (a real
     // Markdown link, unlike the plain backtick-quoted .md filenames used

@@ -28,7 +28,7 @@ mount(document.querySelector("canvas"), program);
 - **A real, type-inferring transpiler**: tokenizer → parser → compiler → GLSL ES 3.00 codegen → WebGL2 runtime, with shape-based type inference (scalars, vectors, matrices, fixed-size arrays, structs), user-defined functions (`fn`), bounded `for` loops, `if`/`else`, and the `glsl { ... }` Escape Hatch for raw GLSL interop.
 - **Errors that teach, not just fail**: a driver compile/link failure is parsed, matched against a structural dictionary, and reported with a `.ezsl`-relative source snippet, a plain-English explanation, and — where the compiler has enough context — a Levenshtein-distance "did you mean?" suggestion (`unknown function 'smoothstp' — did you mean 'smoothstep'?`).
 - **Shadertoy-style multi-pass rendering**: named buffer passes, `BufferName.sample(uv)`, automatic dependency ordering, real cycle detection at pipeline-construction time (before any WebGL context exists), and ping-pong feedback buffers for accumulation effects.
-- **Framework integrations**: a Three.js bridge (`createThreeMaterial`, real vertex-stage EZSL authoring) and Canvas2D compositing (`mountToCanvas2D`, for layering shader output with ordinary 2D drawing).
+- **Framework integrations**: a Three.js bridge (`createThreeMaterial`, real vertex-stage EZSL authoring), a Babylon.js bridge (`createBabylonMaterial`, same vertex-stage authoring against Babylon's own real builtin names), and Canvas2D compositing (`mountToCanvas2D`, for layering shader output with ordinary 2D drawing).
 - **An experimental WebGPU/WGSL target**: a WGSL code generator and UBO-layout auto-generator, sharing the same compiled program representation as the GLSL path. Explicitly experimental — validated by exhaustive unit tests on generated WGSL text structure only, never compiled against a real `GPUDevice`.
 - **A full developer-tooling story**:
   - `ezsl build`/`check`/`watch` — a CLI for compiling `.ezsl` files outside the browser, with the same beginner-friendly error formatting.
@@ -54,7 +54,7 @@ The live site at [patrickjaillet.github.io/EZSL.js](https://patrickjaillet.githu
 
 ## Validation
 
-Every claim above is backed by something more concrete than "the tests pass." The full transpiler pipeline — and every one of the 28 example programs in `examples/` — is confirmed to compile, link, and render correctly (or, for two deliberately-broken examples, to fail with a correctly translated error) in real browser engines (Chromium, Firefox, WebKit, Edge), not just Node-side unit tests asserting on generated GLSL text. 97%+ statement coverage on the transpiler core, a hand-rolled parser fuzzer, and a manual security review are also part of the v1.0.x quality bar — see `docs/architecture/` for the details and the bugs each one actually found.
+Every claim above is backed by something more concrete than "the tests pass." The full transpiler pipeline — and every one of the 41 example programs in `examples/` — is confirmed to compile, link, and render correctly (or, for two deliberately-broken examples, to fail with a correctly translated error) in real browser engines (Chromium, Firefox, WebKit, Edge), not just Node-side unit tests asserting on generated GLSL text. 97%+ statement coverage on the transpiler core, a hand-rolled parser fuzzer, and a manual security review are also part of the v1.0.x quality bar — see `docs/architecture/` for the details and the bugs each one actually found.
 
 ## Contributing / developing locally
 
@@ -64,7 +64,7 @@ cd EZSLjs
 npm install
 npm run build
 npm test
-npm run example:gradient   # or any of ~28 examples: gradient, circle, plasma, noise, raymarch, and more
+npm run example:gradient   # or any of ~41 examples: gradient, circle, plasma, noise, raymarch, and more
 ```
 
 See `docs/architecture/` for design docs on each part of the pipeline, and `docs/ezsl-language-reference.md` for the language itself.
